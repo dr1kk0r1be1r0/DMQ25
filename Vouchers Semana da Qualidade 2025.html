@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana da Qualidade 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-screen {
+            text-align: center;
+        }
+
+        .welcome-logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9ff;
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .stamps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stamp-card {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stamp-card.collected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid #667eea;
+            color: white;
+        }
+
+        .stamp-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .stamp-card.collected .stamp-icon {
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .stamp-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .instructions p {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .status-badge.apto {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.nao-apto {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-info h3 {
+            font-size: 16px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .user-info p {
+            font-size: 14px;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .voucher-complete {
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid #28a745;
+        }
+
+        .voucher-complete h3 {
+            color: #155724;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .voucher-complete p {
+            color: #155724;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- TELA INICIAL -->
+        <div id="homeScreen" class="screen active">
+            <div class="header">
+                <h1>🏆 Semana da Qualidade</h1>
+                <p>2025</p>
+            </div>
+            <div class="content welcome-screen">
+                <div class="welcome-logo">🎯</div>
+                <h2 class="welcome-title">Bem-vindo!</h2>
+                <p class="welcome-subtitle">Cadastre-se e participe do sorteio coletando todos os carimbos dos stands</p>
+                
+                <button class="btn btn-primary" onclick="showScreen('registerScreen')">
+                    📝 Cadastre-se
+                </button>
+                <button class="btn btn-secondary" onclick="showScreen('voucherScreen')">
+                    🎫 Visualizar Voucher
+                </button>
+            </div>
+        </div>
+
+        <!-- TELA DE CADASTRO -->
+        <div id="registerScreen" class="screen">
+            <div class="header">
+                <h1>📝 Cadastro</h1>
+                <p>Preencha seus dados para participar</p>
+            </div>
+            <div class="content">
+                <div id="registerMessage" class="message"></div>
+                
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Nome Completo <span class="required">*</span></label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Empresa <span class="required">*</span></label>
+                        <input type="text" id="regEmpresa" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Chapa <span class="required">*</span></label>
+                        <input type="text" id="regChapa" pattern="[0-9]{10}" maxlength="10" placeholder="10 dígitos" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Telefone <span class="required">*</span></label>
+                        <input type="tel" id="regTelefone" pattern="[0-9]{11,12}" maxlength="12" placeholder="11 ou 12 dígitos" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email <span class="required">*</span></label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">✅ Enviar Cadastro</button>
+                    <button type="button" class="btn btn-back" onclick="showScreen('homeScreen')">← Voltar</button>
+                </form>
+                
+                <div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 4px solid #ffc107; margin-top: 20px;">
+                    <p style="color: #856404; font-size: 14px; font-weight: 600; margin: 0;">
+                        ⚠️ <strong>Observação:</strong> Cadastros duplicados serão excluídos no momento do sorteio.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA DO VOUCHER (CARTÃO DE CARIMBOS) -->
+        <div id="voucherScreen" class="screen">
+            <div class="header">
+                <h1>🎪 Cartão de Carimbos</h1>
+                <p>Colete todos os carimbos!</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                <p style="margin-top: 10px; font-size: 16px;" id="progressText">0/6 carimbos coletados</p>
+            </div>
+
+            <div class="content">
+                <div id="voucherMessage" class="message"></div>
+                
+                <div id="notRegisteredWarning" class="instructions" style="background: #fff3cd; border-left-color: #ffc107;">
+                    <h3 style="color: #856404;">⚠️ Atenção!</h3>
+                    <p style="color: #856404;">Você precisa se cadastrar primeiro para participar do sorteio!</p>
+                </div>
+
+                <div id="userInfoBox" class="user-info" style="display: none;">
+                    <h3>👤 Seus Dados</h3>
+                    <p><strong>Nome:</strong> <span id="displayName"></span></p>
+                    <p><strong>Empresa:</strong> <span id="displayEmpresa"></span></p>
+                    <p><strong>Status:</strong> <span id="statusBadge" class="status-badge"></span></p>
+                </div>
+
+                <div id="completeAlert" class="voucher-complete" style="display: none;">
+                    <h3>🎉 Parabéns!</h3>
+                    <p>Você completou todos os carimbos!</p>
+                    <p style="margin-top: 10px;"><strong>Status: APTO para o sorteio! 🎁</strong></p>
+                </div>
+                
+                <div class="instructions">
+                    <h3>📱 Como participar:</h3>
+                    <p>1. Visite os stands da feira<br>
+                    2. Escaneie os QR codes de cada stand<br>
+                    3. Complete todos os carimbos<br>
+                    4. Seu status será automaticamente atualizado para APTO</p>
+                </div>
+
+                <div class="stamps-grid" id="stampsGrid"></div>
+                
+                <button class="btn btn-back" onclick="showScreen('homeScreen')">← Voltar ao Início</button>
+                
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 2px dashed #dee2e6;">
+                    <button class="btn" style="background: #dc3545; color: white; font-size: 14px;" onclick="showResetModal()">
+                        🔄 Resetar Progresso
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE RESET -->
+        <div id="resetModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+            <div style="background: white; border-radius: 20px; padding: 30px; max-width: 400px; margin: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+                <h3 style="color: #dc3545; margin-bottom: 15px; text-align: center;">⚠️ Resetar Progresso</h3>
+                <p style="color: #495057; margin-bottom: 20px; text-align: center; font-size: 14px;">
+                    Esta ação irá apagar todos os dados salvos (cadastro e carimbos). Digite a senha para confirmar:
+                </p>
+                
+                <div class="form-group">
+                    <label>Senha de Administrador:</label>
+                    <input type="password" id="resetPassword" placeholder="Digite a senha" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px;">
+                </div>
+                
+                <div id="resetError" style="display: none; background: #f8d7da; color: #721c24; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                    <button class="btn" style="background: #6c757d; color: white;" onclick="closeResetModal()">
+                        Cancelar
+                    </button>
+                    <button class="btn" style="background: #dc3545; color: white;" onclick="confirmReset()">
+                        Resetar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURAÇÃO
+        const CONFIG = {
+            // URL do Google Forms (ÚNICO formulário)
+            formUrl: 'https://docs.google.com/forms/d/e/SUA_ID_DO_FORM/formResponse',
+            
+            // IDs dos campos do Google Forms
+            formFields: {
+                name: 'entry.123456789',
+                empresa: 'entry.987654321',
+                chapa: 'entry.456789123',
+                telefone: 'entry.147258369',
+                email: 'entry.258369147',
+                stamps: 'entry.369258147',  // Carimbos coletados
+                apto: 'entry.741852963'      // Status: Apto ou Não Apto
+            },
+            
+            // Stands da feira
+            stands: [
+                { id: 'stand1', name: 'Stand 1', icon: '🎨' },
+                { id: 'stand2', name: 'Stand 2', icon: '🍕' },
+                { id: 'stand3', name: 'Stand 3', icon: '📚' },
+                { id: 'stand4', name: 'Stand 4', icon: '🎵' },
+                { id: 'stand5', name: 'Stand 5', icon: '☕' },
+                { id: 'stand6', name: 'Stand 6', icon: '🎮' }
+            ]
+        };
+
+        let collectedStamps = {};
+        let userData = null;
+        let lastSubmittedStamps = '';
+
+        // Inicializar
+        function init() {
+            loadData();
+            checkUrlParams();
+            renderStamps();
+            updateProgress();
+        }
+
+        // Carregar dados salvos
+        function loadData() {
+            const stamps = localStorage.getItem('collectedStamps');
+            if (stamps) collectedStamps = JSON.parse(stamps);
+            
+            const user = localStorage.getItem('userData');
+            if (user) userData = JSON.parse(user);
+
+            const lastStamps = localStorage.getItem('lastSubmittedStamps');
+            if (lastStamps) lastSubmittedStamps = lastStamps;
+        }
+
+        // Salvar dados
+        function saveStamps() {
+            localStorage.setItem('collectedStamps', JSON.stringify(collectedStamps));
+        }
+
+        function saveUserData(data) {
+            userData = data;
+            localStorage.setItem('userData', JSON.stringify(data));
+        }
+
+        // Navegar entre telas
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            if (screenId === 'voucherScreen') {
+                checkRegistration();
+                renderStamps();
+                updateProgress();
+                updateUserInfo();
+            }
+        }
+
+        // Verificar se usuário está cadastrado
+        function checkRegistration() {
+            const warning = document.getElementById('notRegisteredWarning');
+            const userBox = document.getElementById('userInfoBox');
+            
+            if (!userData) {
+                warning.style.display = 'block';
+                userBox.style.display = 'none';
+            } else {
+                warning.style.display = 'none';
+                userBox.style.display = 'block';
+            }
+        }
+
+        // Atualizar informações do usuário
+        function updateUserInfo() {
+            if (!userData) return;
+            
+            document.getElementById('displayName').textContent = userData.name;
+            document.getElementById('displayEmpresa').textContent = userData.empresa;
+            
+            const status = isComplete() ? 'Apto' : 'Não Apto';
+            const badge = document.getElementById('statusBadge');
+            badge.textContent = status;
+            badge.className = 'status-badge ' + (isComplete() ? 'apto' : 'nao-apto');
+        }
+
+        // Verificar se completou todos os carimbos
+        function isComplete() {
+            return Object.keys(collectedStamps).length === CONFIG.stands.length;
+        }
+
+        // Formulário de cadastro
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const data = {
+                name: document.getElementById('regName').value,
+                empresa: document.getElementById('regEmpresa').value,
+                chapa: document.getElementById('regChapa').value,
+                telefone: document.getElementById('regTelefone').value,
+                email: document.getElementById('regEmail').value
+            };
+            
+            // Validações
+            if (data.chapa.length !== 10) {
+                showMessage('registerMessage', '❌ Chapa deve ter 10 dígitos', 'error');
+                return;
+            }
+            
+            if (data.telefone.length < 11 || data.telefone.length > 12) {
+                showMessage('registerMessage', '❌ Telefone deve ter 11 ou 12 dígitos', 'error');
+                return;
+            }
+            
+            // Salvar dados localmente
+            saveUserData(data);
+            
+            // Enviar para Google Forms
+            await submitToGoogleForms();
+            
+            showMessage('registerMessage', '✅ Cadastro realizado com sucesso!', 'success');
+            
+            setTimeout(() => {
+                showScreen('voucherScreen');
+            }, 2000);
+        });
+
+        // Enviar dados para Google Forms
+        async function submitToGoogleForms() {
+            if (!userData) return;
+            
+            const stamps = Object.keys(collectedStamps).join(', ') || 'Nenhum';
+            const status = isComplete() ? 'Apto' : 'Não Apto';
+            
+            // Não enviar se os carimbos não mudaram
+            if (stamps === lastSubmittedStamps) return;
+            
+            const formData = new FormData();
+            formData.append(CONFIG.formFields.name, userData.name);
+            formData.append(CONFIG.formFields.empresa, userData.empresa);
+            formData.append(CONFIG.formFields.chapa, userData.chapa);
+            formData.append(CONFIG.formFields.telefone, userData.telefone);
+            formData.append(CONFIG.formFields.email, userData.email);
+            formData.append(CONFIG.formFields.stamps, stamps);
+            formData.append(CONFIG.formFields.apto, status);
+            
+            try {
+                await fetch(CONFIG.formUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: formData
+                });
+                
+                lastSubmittedStamps = stamps;
+                localStorage.setItem('lastSubmittedStamps', stamps);
+                
+            } catch (error) {
+                console.error('Erro ao enviar:', error);
+            }
+        }
+
+        // Verificar QR code na URL
+        function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const standId = params.get('stand');
+            
+            if (standId && !collectedStamps[standId]) {
+                collectStamp(standId);
+                showScreen('voucherScreen');
+            }
+        }
+
+        // Coletar carimbo
+        async function collectStamp(standId) {
+            const stand = CONFIG.stands.find(s => s.id === standId);
+            if (!stand) return;
+            
+            collectedStamps[standId] = true;
+            saveStamps();
+            renderStamps();
+            updateProgress();
+            
+            showMessage('voucherMessage', `🎉 Carimbo "${stand.name}" coletado!`, 'success');
+            
+            // Atualizar no Google Forms automaticamente
+            if (userData) {
+                await submitToGoogleForms();
+            }
+            
+            setTimeout(() => {
+                document.getElementById('voucherMessage').style.display = 'none';
+            }, 3000);
+        }
+
+        // Renderizar carimbos
+        function renderStamps() {
+            const grid = document.getElementById('stampsGrid');
+            grid.innerHTML = '';
+            
+            CONFIG.stands.forEach(stand => {
+                const card = document.createElement('div');
+                card.className = 'stamp-card' + (collectedStamps[stand.id] ? ' collected' : '');
+                card.innerHTML = `
+                    <div class="stamp-icon">${collectedStamps[stand.id] ? '✓' : stand.icon}</div>
+                    <div class="stamp-name">${stand.name}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Atualizar progresso
+        function updateProgress() {
+            const total = CONFIG.stands.length;
+            const collected = Object.keys(collectedStamps).length;
+            const percentage = (collected / total) * 100;
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${collected}/${total} carimbos coletados`;
+            
+            const completeAlert = document.getElementById('completeAlert');
+            if (isComplete() && userData) {
+                completeAlert.style.display = 'block';
+            } else {
+                completeAlert.style.display = 'none';
+            }
+            
+            updateUserInfo();
+        }
+
+        // Mostrar mensagem
+        function showMessage(elementId, text, type) {
+            const msg = document.getElementById(elementId);
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+        }
+
+        // Mostrar modal de reset
+        function showResetModal() {
+            document.getElementById('resetModal').style.display = 'flex';
+            document.getElementById('resetPassword').value = '';
+            document.getElementById('resetError').style.display = 'none';
+        }
+
+        // Fechar modal de reset
+        function closeResetModal() {
+            document.getElementById('resetModal').style.display = 'none';
+        }
+
+        // Confirmar reset
+        function confirmReset() {
+            const password = document.getElementById('resetPassword').value;
+            const correctPassword = 'pense_diferente!';
+            
+            if (password === correctPassword) {
+                // Limpar todos os dados
+                localStorage.clear();
+                collectedStamps = {};
+                userData = null;
+                lastSubmittedStamps = '';
+                
+                closeResetModal();
+                
+                // Mostrar mensagem de sucesso
+                showMessage('voucherMessage', '✅ Progresso resetado com sucesso!', 'success');
+                
+                // Atualizar interface
+                setTimeout(() => {
+                    showScreen('homeScreen');
+                    location.reload();
+                }, 1500);
+            } else {
+                // Mostrar erro
+                const errorMsg = document.getElementById('resetError');
+                errorMsg.textContent = '❌ Senha incorreta! Tente novamente.';
+                errorMsg.style.display = 'block';
+                
+                // Limpar campo
+                document.getElementById('resetPassword').value = '';
+            }
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('resetModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeResetModal();
+            }
+        });
+
+        // Permitir Enter para confirmar reset
+        document.getElementById('resetPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                confirmReset();
+            }
+        });
+
+        // Iniciar
+        init();
+    </script>
+</body>
+</html>
