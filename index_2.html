@@ -193,7 +193,7 @@
                 <p class="welcome-subtitle">QA Workshop - RPA for All<br>📅 9h às 12h (Workshop) | Monitoria à tarde</p>
                 <div class="info-box">
                     <p style="color: #003366; font-size: 14px; font-weight: 600; margin: 0;">
-                        ✅ <strong>Importante:</strong> Preencha a lista de presença completando o formulário.
+                        ✅ <strong>Importante:</strong> Cadastre sua idéia completando o formulário.
                     </p>
                 </div>
                 <button class="btn btn-primary" onclick="showScreen('registerScreen')">📋 Confirmar Presença</button>
@@ -310,7 +310,7 @@
             if (!data.campo1 || !data.campo2 || !data.name || !data.empresa || !data.email || !data.area) {
                 showMessage('registerMessage', '⚠️ Por favor, preencha todos os campos obrigatórios!', 'error');
                 submitBtn.disabled = false;
-                submitBtn.textContent = '✅ Confirmar Presença';
+                submitBtn.textContent = '✅ Confirmar Cadastro';
                 return;
             }
 
@@ -319,13 +319,13 @@
             if (!emailRegex.test(data.email)) {
                 showMessage('registerMessage', '⚠️ Por favor, insira um email válido!', 'error');
                 submitBtn.disabled = false;
-                submitBtn.textContent = '✅ Confirmar Presença';
+                submitBtn.textContent = '✅ Confirmar Cadastro';
                 return;
             }
 
             try {
                 await sendToGoogleForms(data);
-                showMessage('registerMessage', '✅ Presença confirmada com sucesso!', 'success');
+                showMessage('registerMessage', '✅ Cadastro confirmada com sucesso!', 'success');
                 
                 // Limpar formulário
                 document.getElementById('registerForm').reset();
@@ -373,7 +373,7 @@
                 body: formData
             });
 
-            console.log('Presença confirmada com sucesso!');
+            console.log('Cadastro confirmado com sucesso!');
         }
     </script>
 </body>
