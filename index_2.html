@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Presença: QA Workshop</title>
+    <title>Cadastro de Idéia: QA Workshop</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -204,17 +204,17 @@
         <div id="registerScreen" class="screen">
             <div class="header">
                 <img src="https://raw.githubusercontent.com/dr1kk0r1be1r0/DMQ25/main/logo.png" alt="Logo" class="header-logo">
-                <p>Preencha seus dados para confirmar presença</p>
+                <p>Preencha seus dados para cadastrar sua idéia RPA</p>
             </div>
             <div class="content">
                 <div id="registerMessage" class="message"></div>
                 <form id="registerForm">
                     <div class="form-group">
-                        <label>Campo 1 <span class="required">*</span></label>
+                        <label>Título da Idéia<span class="required">*</span></label>
                         <input type="text" id="regCampo1" required placeholder="Digite o campo 1">
                     </div>
                     <div class="form-group">
-                        <label>Campo 2 <span class="required">*</span></label>
+                        <label>Descrição da Idéia<span class="required">*</span></label>
                         <input type="text" id="regCampo2" required placeholder="Digite o campo 2">
                     </div>
                     <div class="form-group">
@@ -250,7 +250,7 @@
                 </form>
                 <div class="info-box" style="margin-top: 20px;">
                     <p style="color: #003366; font-size: 14px; font-weight: 600; margin: 0;">
-                        📌 <strong>Observação:</strong> Ao confirmar sua presença, você garante sua vaga no workshop.
+        
                     </p>
                 </div>
             </div>
@@ -334,14 +334,14 @@
                 setTimeout(() => {
                     showScreen('homeScreen');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = '✅ Confirmar Presença';
+                    submitBtn.textContent = '✅ Confirmar Cadastro';
                 }, 2000);
                 
             } catch (error) {
                 console.error('Erro ao enviar dados:', error);
-                showMessage('registerMessage', '❌ Erro ao confirmar presença. Tente novamente.', 'error');
+                showMessage('registerMessage', '❌ Erro ao cadastrar idéia. Tente novamente.', 'error');
                 submitBtn.disabled = false;
-                submitBtn.textContent = '✅ Confirmar Presença';
+                submitBtn.textContent = '✅ Confirmar Cadastro';
             }
         });
 
