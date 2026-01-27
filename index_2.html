@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Idéia: QA Workshop</title>
+    <title>Cadastro de Ideia: QA Workshop</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -193,10 +193,10 @@
                 <p class="welcome-subtitle">QA Workshop - RPA for All<br></p>
                 <div class="info-box">
                     <p style="color: #003366; font-size: 14px; font-weight: 600; margin: 0;">
-                        ✅ <strong>Importante:</strong> Cadastre sua idéia completando o formulário.
+                        ✅ <strong>Importante:</strong> Cadastre sua ideia completando o formulário.
                     </p>
                 </div>
-                <button class="btn btn-primary" onclick="showScreen('registerScreen')">📋 Cadastrar Idéia</button>
+                <button class="btn btn-primary" onclick="showScreen('registerScreen')">📋 Cadastrar Ideia</button>
             </div>
         </div>
         
@@ -204,18 +204,18 @@
         <div id="registerScreen" class="screen">
             <div class="header">
                 <img src="https://raw.githubusercontent.com/dr1kk0r1be1r0/DMQ25/main/logo.png" alt="Logo" class="header-logo">
-                <p>Preencha seus dados para cadastrar sua idéia</p>
+                <p>Preencha seus dados para cadastrar sua ideia</p>
             </div>
             <div class="content">
                 <div id="registerMessage" class="message"></div>
                 <form id="registerForm">
                     <div class="form-group">
                         <label>Título da Idéia<span class="required">*</span></label>
-                        <input type="text" id="regCampo1" required placeholder="Digite o título da idéia">
+                        <input type="text" id="regCampo1" required placeholder="Digite o título da ideia">
                     </div>
                     <div class="form-group">
-                        <label>Descrição da Idéia<span class="required">*</span></label>
-                        <input type="text" id="regCampo2" required placeholder="Digite a descrição da idéia">
+                        <label>Descrição da Ideia<span class="required">*</span></label>
+                        <input type="text" id="regCampo2" required placeholder="Digite a descrição da ideia">
                     </div>
                     <div class="form-group">
                         <label>Nome Completo <span class="required">*</span></label>
@@ -325,12 +325,12 @@
 
             try {
                 await sendToGoogleForms(data);
-                showMessage('registerMessage', '✅ Cadastro confirmada com sucesso!', 'success');
+                showMessage('registerMessage', '✅ Cadastro realizado com sucesso!', 'success');
                 
                 // Limpar formulário
                 document.getElementById('registerForm').reset();
                 
-                // Voltar para tela inicial após 2 segundos
+                // Voltar para tela inicial após 5 segundos
                 setTimeout(() => {
                     showScreen('homeScreen');
                     submitBtn.disabled = false;
@@ -339,7 +339,7 @@
                 
             } catch (error) {
                 console.error('Erro ao enviar dados:', error);
-                showMessage('registerMessage', '❌ Erro ao cadastrar idéia. Tente novamente.', 'error');
+                showMessage('registerMessage', '❌ Erro ao cadastrar ideia. Tente novamente.', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = '✅ Confirmar Cadastro';
             }
