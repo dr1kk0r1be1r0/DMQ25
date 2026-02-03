@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Frota Veicular</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #003366 0%, #001a33 100%); 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+            overflow: hidden; 
+        }
+        .header { 
+            background: linear-gradient(135deg, #003366 0%, #001a33 100%); 
+            color: white; 
+            padding: 30px 20px; 
+            text-align: center; 
+        }
+        .header h1 { font-size: 28px; margin-bottom: 10px; }
+        .header-logo { max-width: 100%; height: auto; max-height: 80px; margin-bottom: 15px; }
+        .header p { font-size: 14px; opacity: 0.9; }
+        .content { padding: 30px 20px; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #495057; 
+            font-size: 15px; 
+        }
+        .form-group label .required { color: #dc3545; }
+        .form-group input, .form-group textarea { 
+            width: 100%; 
+            padding: 14px; 
+            border: 2px solid #dee2e6; 
+            border-radius: 10px; 
+            font-size: 15px; 
+            transition: border-color 0.3s ease; 
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group textarea:focus { 
+            outline: none; 
+            border-color: #003366; 
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .checkbox-group {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .checkbox-item:last-child {
+            border-bottom: none;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            flex: 1;
+        }
+        .photo-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #dee2e6;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .photo-section h3 {
+            color: #003366;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .photo-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .photo-preview {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            border: 2px solid #dee2e6;
+        }
+        .photo-preview img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+        .photo-preview .remove-photo {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .btn { 
+            width: 100%; 
+            padding: 16px; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            margin-bottom: 15px; 
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #003366 0%, #001a33 100%); 
+            color: white; 
+        }
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 20px rgba(0, 51, 102, 0.4); 
+        }
+        .btn-camera {
+            background: #28a745;
+            color: white;
+        }
+        .btn-camera:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        .btn:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+            transform: none; 
+        }
+        .message { 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 15px; 
+            text-align: center; 
+            font-size: 14px; 
+            display: none; 
+        }
+        .message.success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+            display: block; 
+        }
+        .message.error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+            display: block; 
+        }
+        .camera-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2001;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .camera-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+        .camera-header {
+            background: linear-gradient(135deg, #003366 0%, #001a33 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .camera-header h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        #cameraVideo {
+            width: 100%;
+            height: auto;
+            max-height: 60vh;
+            display: block;
+            background: #000;
+            object-fit: cover;
+        }
+        .camera-footer {
+            padding: 20px;
+            text-align: center;
+            background: white;
+            flex-shrink: 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .btn-capture {
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            max-width: 200px;
+        }
+        .btn-close {
+            background: #dc3545;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            max-width: 200px;
+        }
+        .instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #003366;
+        }
+        .instructions h3 {
+            color: #003366;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .instructions p {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.6;
+        }
+        .photo-count {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        @media (max-width: 480px) {
+            .photo-preview-container {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            .photo-preview img {
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://raw.githubusercontent.com/dr1kk0r1be1r0/DMQ25/main/logo.png" alt="Logo Controle de Frota" class="header-logo">
+            <h1>Controle de Frota</h1>
+            <p>Verificação e registro de veículos</p>
+        </div>
+        
+        <div class="content">
+            <div id="formMessage" class="message"></div>
+            
+            <div class="instructions">
+                <h3>📋 Instruções</h3>
+                <p>Preencha todos os campos obrigatórios, marque os itens verificados, tire fotos do veículo e envie o formulário.</p>
+            </div>
+            
+            <form id="frotaForm">
+                <!-- Nome do Motorista -->
+                <div class="form-group">
+                    <label>Nome completo <span class="required">*</span></label>
+                    <input type="text" id="nomeMotorista" required placeholder="Digite o nome completo">
+                </div>
+                
+                <!-- Verificação Externa -->
+                <div class="form-group">
+                    <label>Condições Gerais <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check1" value="Sem danos externos (amassados, riscos, vidros/lanternas intactos)">
+                            <label for="check1">Sem danos externos (amassados, riscos, vidros/lanternas intactos)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check2" value="Sem danos internos (bancos, painel e acabamento íntegros)">
+                            <label for="check2">Sem danos internos (bancos, painel e acabamento íntegros)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check3" value="Pneus em boas condições">
+                            <label for="check3">Pneus em boas condições</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check4" value="Kit de segurança completo (triângulo, chave, macaco, estepe)">
+                            <label for="check4">Kit de segurança completo (triângulo, chave, macaco, estepe)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check5" value="Documentação presente no veículo">
+                            <label for="check5">Documentação presente no veículo</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verificação Interna/Mecânica -->
+                <div class="form-group">
+                    <label>Funcionamento <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check6" value="Sem luzes de alerta acesas no painel">
+                            <label for="check6">Sem luzes de alerta acesas no painel</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check7" value="Freios e direção funcionando normalmente">
+                            <label for="check7">Freios e direção funcionando normalmente</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check8" value="Faróis, setas e lanternas funcionando">
+                            <label for="check8">Faróis, setas e lanternas funcionando</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="check9" value="Nível de combustível está completo.">
+                            <label for="check9">Nível de combustível está completo</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Observações -->
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="observacoes"></textarea>
+                </div>
+                
+                <!-- Seção de Fotos -->
+                <div class="photo-section">
+                    <h3>📸 Fotos do Veículo</h3>
+                    <p style="font-size: 14px; color: #6c757d; margin-bottom: 15px;">
+                        Tire fotos do veículo para anexar ao formulário
+                    </p>
+                    <button type="button" class="btn btn-camera" onclick="openCamera()">
+                        📷 Abrir Câmera
+                    </button>
+                    <div id="photoPreviewContainer" class="photo-preview-container"></div>
+                    <div class="photo-count" id="photoCount">0 foto(s) capturada(s)</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    ✅ Enviar Formulário
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal da Câmera -->
+    <div id="cameraModal" class="camera-modal">
+        <div class="camera-container">
+            <div class="camera-header">
+                <h3>📷 Capturar Foto</h3>
+                <p>Posicione o veículo e clique em capturar</p>
+            </div>
+            <video id="cameraVideo" autoplay playsinline></video>
+            <div class="camera-footer">
+                <button type="button" class="btn-capture" onclick="capturePhoto()">
+                    📸 Capturar
+                </button>
+                <button type="button" class="btn-close" onclick="closeCamera()">
+                    ✖ Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <canvas id="photoCanvas" style="display: none;"></canvas>
+    
+    <script>
+        // Configuração do Google Forms
+        const CONFIG = {
+            // URL base do formulário (viewform, não formResponse)
+            formBaseUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScsjnyn39L-k-zC7Kj_RhexjwWfANF0pTTuI40UKYQSFpQAYw/viewform',
+            fields: {
+                motorista: 'entry.205764918',
+                verificacaoExterna: 'entry.1224370301',
+                verificacaoInterna: 'entry.1763191671',
+                observacoes: 'entry.88022580'
+            }
+        };
+        
+        // Função para criar URL pré-preenchida
+        function criarUrlPreenchida(dados) {
+            const url = new URL(CONFIG.formBaseUrl);
+            url.searchParams.set('usp', 'pp_url');
+            
+            // Adicionar nome
+            url.searchParams.set(CONFIG.fields.motorista, dados.motorista);
+            
+            // Adicionar checkboxes de condições gerais
+            dados.condicoesGerais.forEach(valor => {
+                url.searchParams.append(CONFIG.fields.verificacaoExterna, valor);
+            });
+            
+            // Adicionar checkboxes de funcionamento
+            dados.funcionamento.forEach(valor => {
+                url.searchParams.append(CONFIG.fields.verificacaoInterna, valor);
+            });
+            
+            // Adicionar observações se existir
+            if (dados.observacoes && dados.observacoes.trim()) {
+                url.searchParams.set(CONFIG.fields.observacoes, dados.observacoes);
+            }
+            
+            return url.toString();
+        }
+        
+        let stream = null;
+        let capturedPhotos = [];
+        
+        // Abrir câmera
+        async function openCamera() {
+            const modal = document.getElementById('cameraModal');
+            const video = document.getElementById('cameraVideo');
+            
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment',
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
+                    }
+                });
+                
+                video.srcObject = stream;
+                modal.style.display = 'flex';
+            } catch (error) {
+                console.error('Erro ao acessar câmera:', error);
+                showMessage('❌ Não foi possível acessar a câmera. Verifique as permissões do navegador.', 'error');
+            }
+        }
+        
+        // Fechar câmera
+        function closeCamera() {
+            const modal = document.getElementById('cameraModal');
+            const video = document.getElementById('cameraVideo');
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            video.srcObject = null;
+            modal.style.display = 'none';
+        }
+        
+        // Capturar foto
+        function capturePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('photoCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Configurar canvas com as dimensões do vídeo
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // Desenhar o frame atual do vídeo no canvas
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Converter para base64
+            const photoData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // Adicionar à lista de fotos
+            capturedPhotos.push(photoData);
+            updatePhotoPreview();
+            
+            // Fechar câmera após captura
+            closeCamera();
+            
+            showMessage('✅ Foto capturada com sucesso!', 'success');
+        }
+        
+        // Atualizar preview das fotos
+        function updatePhotoPreview() {
+            const container = document.getElementById('photoPreviewContainer');
+            const countElement = document.getElementById('photoCount');
+            
+            container.innerHTML = '';
+            
+            capturedPhotos.forEach((photo, index) => {
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'photo-preview';
+                
+                const img = document.createElement('img');
+                img.src = photo;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-photo';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = () => removePhoto(index);
+                
+                previewDiv.appendChild(img);
+                previewDiv.appendChild(removeBtn);
+                container.appendChild(previewDiv);
+            });
+            
+            countElement.textContent = `${capturedPhotos.length} foto(s) capturada(s)`;
+        }
+        
+        // Remover foto
+        function removePhoto(index) {
+            capturedPhotos.splice(index, 1);
+            updatePhotoPreview();
+        }
+        
+        // Mostrar mensagem
+        function showMessage(text, type) {
+            const msg = document.getElementById('formMessage');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+            
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Enviar formulário
+        document.getElementById('frotaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Preparando...';
+            
+            try {
+                // Coletar dados do formulário
+                const motorista = document.getElementById('nomeMotorista').value;
+                const observacoes = document.getElementById('observacoes').value;
+                
+                // Coletar checkboxes marcados - Condições Gerais
+                const condicoesGerais = [];
+                for (let i = 1; i <= 5; i++) {
+                    const checkbox = document.getElementById(`check${i}`);
+                    if (checkbox.checked) {
+                        condicoesGerais.push(checkbox.value);
+                    }
+                }
+                
+                // Coletar checkboxes marcados - Funcionamento
+                const funcionamento = [];
+                for (let i = 6; i <= 9; i++) {
+                    const checkbox = document.getElementById(`check${i}`);
+                    if (checkbox.checked) {
+                        funcionamento.push(checkbox.value);
+                    }
+                }
+                
+                // Validar se pelo menos um checkbox foi marcado
+                if (condicoesGerais.length === 0 && funcionamento.length === 0) {
+                    showMessage('⚠️ Por favor, marque pelo menos um item de verificação.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '✅ Enviar Formulário';
+                    return;
+                }
+                
+                // Preparar observações com info sobre fotos
+                let obsCompletas = observacoes;
+                if (capturedPhotos.length > 0) {
+                    obsCompletas += `\n\n[${capturedPhotos.length} foto(s) capturada(s) - salvas localmente]`;
+                    // Salvar fotos no localStorage
+                    const timestamp = new Date().toISOString();
+                    localStorage.setItem('fotos_' + timestamp, JSON.stringify({
+                        motorista: motorista,
+                        timestamp: timestamp,
+                        fotos: capturedPhotos
+                    }));
+                }
+                
+                // Criar objeto com os dados
+                const dados = {
+                    motorista: motorista,
+                    condicoesGerais: condicoesGerais,
+                    funcionamento: funcionamento,
+                    observacoes: obsCompletas
+                };
+                
+                // Criar URL pré-preenchida
+                const urlPreenchida = criarUrlPreenchida(dados);
+                
+                console.log('URL gerada:', urlPreenchida);
+                
+                // Salvar dados no sessionStorage para não perder
+                sessionStorage.setItem('ultimoEnvio', JSON.stringify(dados));
+                
+                // Redirecionar para o Google Forms pré-preenchido
+                showMessage('✅ Redirecionando para finalizar o envio...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = urlPreenchida;
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Erro ao processar:', error);
+                showMessage('❌ Erro ao processar formulário. Tente novamente.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '✅ Enviar Formulário';
+            }
+        });
+        
+        // Limpar stream ao fechar a página
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+</html>
